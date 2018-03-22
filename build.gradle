@@ -19,6 +19,8 @@ mainClassName = 'App'
 
 configurations{
     jar.archiveName='myJar.jar'
+
+    //abc
 }
 
 dependencies {
