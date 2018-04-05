@@ -15,7 +15,7 @@ plugins {
 }
 
 // Define the main class for the application
-mainClassName = 'App'
+mainClassName = 'ist.meic.pa.GenericFunctions.WithGenericFunctions'
 
 configurations{
     jar.archiveName='myJar.jar'
@@ -23,13 +23,11 @@ configurations{
 
 dependencies {
 
-    //compile group:'org.javassist',name:'javassist',version:'3.22.0-GA'
+    compile group:'org.javassist',name:'javassist',version:'3.22.0-GA'
 
     // This dependency is found on compile classpath of this component and consumers.
     //compile 'com.google.guava:guava:23.0'
 
-    // Use JUnit test framework
-    testCompile 'junit:junit:4.12'
 }
 
 // In this section you declare where to find the dependencies of your project
@@ -41,6 +39,10 @@ repositories {
     mavenCentral()
 }
 
+sourceSets.main.java.srcDirs = ['src']
+sourceSets.main.java.outputDir = file('classes')
+
 run{
     standardInput = System.in
+    args = ["ist.meic.pa.GenericFunctions.TestCombine"]
 }
