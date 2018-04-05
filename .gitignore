@@ -23,4 +23,5 @@ bin/
 # intelliJ
 
 .idea/
-.iml
+*.iml
+out/
