@@ -17,8 +17,28 @@ public class WithGenericFunctions {
             System.out.println("Need a class name");
             //throw something
         } else {
+            //example code
+            /*
             ClassPool pool = ClassPool.getDefault();
-            //CtClass ctClass = pool.get(args[0]);
+            CtClass ctClass = pool.get(args[0]);
+            memoize(ctClass, ctClass.getDeclaredMethod(args[1]));
+            Class<?> rtClass = ctClass.toClass();
+            Method main = rtClass.getMethod("main", args.getClass());
+            String[] restArgs = new String[args.length - 2];
+            System.arraycopy(args, 2, restArgs, 0, restArgs.length);
+            main.invoke(null, new Object[] { restArgs });
+            */
+
+            //com o class loader do javassist
+            /*
+            Translator translator = new UndoableTranslator();
+            ClassPool pool = ClassPool.getDefault();
+            Loader classLoader = new Loader();
+            classLoader.addTranslator(pool, translator);
+            String[] restArgs = new String[args.length - 1];
+            System.arraycopy(args, 1, restArgs, 0, restArgs.length);
+            classLoader.run(args[0], restArgs);
+             */
         }
     }
 }
