@@ -1,4 +1,4 @@
-package main.java.ist.meic.pa.GenericFunctions;
+package ist.meic.pa.GenericFunctions;
 
 import java.util.Vector;
 

@@ -1,4 +1,4 @@
-package main.java.ist.meic.pa.GenericFunctions;
+package ist.meic.pa.GenericFunctions;
 
 import javassist.*;
 import java.io.*;
@@ -12,14 +12,22 @@ public class WithGenericFunctions {
     }
 
     public static void main(String[] args) throws NotFoundException, CannotCompileException, IOException {
-        System.out.println(new WithGenericFunctions().getGreeting());
+        //System.out.println(new WithGenericFunctions().getGreeting());
         if (args.length < 1){
             System.out.println("Need a class name");
             //throw something
         } else {
+            System.out.print("Class : "+args[0]+'\n');
+            Loader classLoader = new Loader();
+
+            try{
+                classLoader.run(args[0],new String[0]);
+            }
+            catch (Throwable t){
+                System.out.println("class loader failed to run");
+            }
             //example code
-            /*
-            ClassPool pool = ClassPool.getDefault();
+            /*ClassPool pool = ClassPool.getDefault();
             CtClass ctClass = pool.get(args[0]);
             memoize(ctClass, ctClass.getDeclaredMethod(args[1]));
             Class<?> rtClass = ctClass.toClass();

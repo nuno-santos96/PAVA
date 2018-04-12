@@ -15,7 +15,7 @@ plugins {
 }
 
 // Define the main class for the application
-mainClassName = 'main.java.ist.meic.pa.GenericFunctions.WithGenericFunctions'
+mainClassName = 'ist.meic.pa.GenericFunctions.WithGenericFunctions'
 
 configurations{
     jar.archiveName='myJar.jar'
@@ -27,7 +27,6 @@ dependencies {
 
     // This dependency is found on compile classpath of this component and consumers.
     //compile 'com.google.guava:guava:23.0'
-
 }
 
 // In this section you declare where to find the dependencies of your project
@@ -35,14 +34,10 @@ repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     //jcenter()
-
     mavenCentral()
 }
 
-sourceSets.main.java.srcDirs = ['src']
-sourceSets.main.java.outputDir = file('classes')
-
 run{
     standardInput = System.in
-    args = ["main.java.ist.meic.pa.GenericFunctions.TestCombine"]
+    args = ["ist.meic.pa.GenericFunctions.TestCombine"]
 }
