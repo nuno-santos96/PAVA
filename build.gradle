@@ -15,7 +15,7 @@ plugins {
 }
 
 // Define the main class for the application
-mainClassName = 'main.java.ist.meic.pa.GenericFunctions.WithGenericFunctions'
+mainClassName = 'ist.meic.pa.GenericFunctions.WithGenericFunctions'
 
 configurations{
     jar.archiveName='myJar.jar'
@@ -39,10 +39,8 @@ repositories {
     mavenCentral()
 }
 
-sourceSets.main.java.srcDirs = ['src']
-sourceSets.main.java.outputDir = file('classes')
 
 run{
-    standardInput = System.in
-    args = ["main.java.ist.meic.pa.GenericFunctions.TestCombine"]
+    //standardInput = System.in
+    args 'ist.meic.pa.GenericFunctions.TestCombine'
 }
