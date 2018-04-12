@@ -1,4 +1,4 @@
-package ist.meic.pa.GenericFunctions;
+package main.java.ist.meic.pa.GenericFunctions;
 
 public class TestCombine {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package ist.meic.pa.GenericFunctions;
+package main.java.ist.meic.pa.GenericFunctions;
 
 import javassist.*;
 import java.io.*;
