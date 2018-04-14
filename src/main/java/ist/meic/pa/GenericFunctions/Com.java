@@ -2,6 +2,7 @@ package ist.meic.pa.GenericFunctions;
 
 import java.util.Vector;
 
+@GenericFunction
 public interface Com {
     public static Object bine(Object a, Object b) {
         Vector<Object> v = new Vector<Object>();
