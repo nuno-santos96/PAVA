@@ -1,0 +1,6 @@
+Duvidas:
+chamadas a bine dentro de uma funçao bine (recursivo que nao é bom para a soluçao de mudar o nome, e outro)
+
+
+
+é preciso escrever o nome todo ist.meic.whatever em chamadas a funçoes dentro do mesmo package (quando se )
