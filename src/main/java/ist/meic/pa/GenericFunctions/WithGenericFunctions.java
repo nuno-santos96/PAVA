@@ -29,13 +29,6 @@ public class WithGenericFunctions {
                             if (calledClass.isAnnotationPresent(GenericFunction.class)){
                                 System.out.println("{ ist.meic.pa.GenericFunctions.Dispatcher.dispatch($args,\"" + args[0] + "\"); $_ = $proceed($1,$2); }");
                                 m.replace("{ ist.meic.pa.GenericFunctions.Dispatcher.dispatch($args,\"" + args[0] + "\"); $_ = $proceed($1,$2); }");
-
-
-                                //TODO: choose from left to right the best one
-
-                                //suggestion for the next part
-                                //TODO: then change the chosen method name to 'methodName2'
-                                //TODO: and change the method call to call the method 'methodName2'
                             }
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
@@ -45,7 +38,7 @@ public class WithGenericFunctions {
                             e.printStackTrace();
                         }
                     }
-                    });
+                });
 
                 Class<?> rtClass = ctClass.toClass();
                 Method main = rtClass.getMethod("main", String[].class);

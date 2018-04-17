@@ -40,6 +40,26 @@ public class Dispatcher {
 
                             int curr = 0;
                             Boolean found = true;
+                            ArrayList<Method> toRemove = new ArrayList<>();
+                            for (Class a : calledParameters) {
+                                for (Method me : methodsThatFit) {
+                                    Class b = me.getParameterTypes()[curr];
+                                    Class aux = a;
+                                    while (!aux.equals(b)) {
+                                        aux = aux.getSuperclass();
+                                        if (aux == null) {
+                                            toRemove.add(me);
+                                            break;
+                                        }
+                                    }
+                                }
+                                curr++;
+                            }
+                            for (Method method : toRemove)
+                                methodsThatFit.remove(method);
+
+                            curr = 0;
+
                             for (Class a : calledParameters){
                                 ArrayList<Integer> distances = new ArrayList<>();
                                 for (Method me : methodsThatFit){
@@ -87,14 +107,15 @@ public class Dispatcher {
                                 }
                                 curr++;
                             }
+
                             if (found) {
                                 for (Method aba : methodsThatFit) {
                                     System.out.println("Chosen method:");
                                     System.out.println(aba);
                                 }
+
                                 //TODO: change method call name and chosen method name
                             }
-
                         }
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
