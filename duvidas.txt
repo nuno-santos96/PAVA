@@ -5,7 +5,8 @@ chamadas a bine dentro de uma funçao bine (recursivo que nao é bom para a solu
 
 é preciso escrever o nome todo ist.meic.whatever em chamadas a funçoes dentro do mesmo package 
 
-
+é suposto impedir de executar os before e after no meio?
 
 To do
-taratar das chamadas a bin dentro de Com
+tratar das chamadas a bin dentro de Com
+ver casos em que a WhitGenericFucntions recebe mais args para alem do nome da classe

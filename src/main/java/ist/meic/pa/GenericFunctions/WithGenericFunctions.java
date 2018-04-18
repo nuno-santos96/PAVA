@@ -52,13 +52,10 @@ public class WithGenericFunctions {
                                 }
                                 calledClass.toClass();
                             }
-                        } catch (ClassNotFoundException e) {
+                        } catch (ClassNotFoundException | NotFoundException |
+                                 CannotCompileException e) {
                             e.printStackTrace();
-                        } catch (NotFoundException e) {
-                            e.printStackTrace();
-                        } catch (CannotCompileException e) {
-                            e.printStackTrace();
-                        }
+                        } 
                     }
                 });
 
@@ -66,15 +63,8 @@ public class WithGenericFunctions {
                 Method main = rtClass.getMethod("main", String[].class);
                 String[] params = null; // init params accordingly
                 main.invoke(null, (Object) params);
-            } catch (NotFoundException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (CannotCompileException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
+            } catch (NotFoundException | NoSuchMethodException | IllegalAccessException |
+                    InvocationTargetException | CannotCompileException e) {
                 e.printStackTrace();
             }
         }

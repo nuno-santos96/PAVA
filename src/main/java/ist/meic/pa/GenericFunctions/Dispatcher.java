@@ -25,6 +25,7 @@ public class Dispatcher {
                 for (Object o : args)
                     calledParameters.add(o.getClass());
 
+                //removing incompatible methods
                 int curr = 0;
                 Boolean found = true;
                 ArrayList<Method> toRemove = new ArrayList<>();
@@ -44,9 +45,17 @@ public class Dispatcher {
                 }
                 for (Method method : toRemove)
                     methodsThatFit.remove(method);
+                
+                //doing before methods
+                for (Method me : methodsThatFit) {
+                    if (me.isAnnotationPresent(BeforeMethod.class)){
+                        me.invoke(null, args);
+                    }
+                }
+                ArrayList<Method> originalMethodsThatFit = new ArrayList<Method>(methodsThatFit);
 
+                //calculating method with the closest parameters
                 curr = 0;
-
                 for (Class a : calledParameters){
                     ArrayList<Integer> distances = new ArrayList<>();
                     for (Method me : methodsThatFit){
@@ -57,7 +66,7 @@ public class Dispatcher {
                             dist++;
                             aux = aux.getSuperclass();
                             if (aux == null){
-                                dist = Integer.MAX_VALUE;
+                                //dist = Integer.MAX_VALUE;
                                 break;
                             }
                         }
@@ -67,13 +76,6 @@ public class Dispatcher {
                     int min = distances.get(0);
                     for (int i : distances){
                         min = min < i ? min : i;
-                    }
-
-                    //if no method fits
-                    if (min == Integer.MAX_VALUE) {
-                        System.out.println("Can't call any method!");
-                        found = false;
-                        break;
                     }
 
                     Iterator<Integer> it = distances.iterator();
@@ -94,19 +96,24 @@ public class Dispatcher {
                     }
                     curr++;
                 }
-
+                Object returnValue=null;
                 if (found) {
                     Method rightMethod = methodsThatFit.get(0);
-                    return rightMethod.invoke(null, args);
+                    returnValue = rightMethod.invoke(null, args);
                 }
+
+                //doing after methods
+                for (Method me : originalMethodsThatFit) {
+                    if (me.isAnnotationPresent(AfterMethod.class)){
+                        me.invoke(null, args);
+                    }
+                }
+                return returnValue;
             }
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException | IllegalAccessException |
+                 InvocationTargetException e) {
             e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+        } 
         return 0;
     }
 }
