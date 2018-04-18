@@ -3,4 +3,9 @@ chamadas a bine dentro de uma funçao bine (recursivo que nao é bom para a solu
 
 
 
-é preciso escrever o nome todo ist.meic.whatever em chamadas a funçoes dentro do mesmo package (quando se )
+é preciso escrever o nome todo ist.meic.whatever em chamadas a funçoes dentro do mesmo package 
+
+
+
+To do
+taratar das chamadas a bin dentro de Com

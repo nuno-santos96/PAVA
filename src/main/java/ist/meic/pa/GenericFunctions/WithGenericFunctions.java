@@ -27,8 +27,8 @@ public class WithGenericFunctions {
                             Class calledClass = Class.forName(m.getClassName());
                             CtMethod calledMethod = m.getMethod();
                             if (calledClass.isAnnotationPresent(GenericFunction.class)){
-                                System.out.println("{ ist.meic.pa.GenericFunctions.Dispatcher.dispatch($args,\"" + args[0] + "\"); $_ = $proceed($1,$2); }");
-                                m.replace("{ ist.meic.pa.GenericFunctions.Dispatcher.dispatch($args,\"" + args[0] + "\"); $_ = $proceed($1,$2); }");
+                                System.out.println("{ ist.meic.pa.GenericFunctions.Dispatcher.dispatch($args,\"" + args[0] + "\"); $_ = $proceed($args); }");
+                                m.replace("{ ist.meic.pa.GenericFunctions.Dispatcher.dispatch($args,\"" + args[0] + "\"); $_ = $proceed($args); }");
                             }
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
