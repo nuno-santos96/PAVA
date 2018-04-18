@@ -30,13 +30,10 @@ public class WithGenericFunctions {
                                 System.out.println("ist.meic.pa.GenericFunctions.Dispatcher.dispatch($args,\"" + calledClass.getName() + "\",\"" + calledMethod.getName() + "\");");
                                 m.replace("$_ = ($r) ist.meic.pa.GenericFunctions.Dispatcher.dispatch($args,\"" + calledClass.getName() + "\",\"" + calledMethod.getName() + "\");");
                             }
-                        } catch (ClassNotFoundException e) {
+                        } catch (ClassNotFoundException | NotFoundException |
+                                 CannotCompileException e) {
                             e.printStackTrace();
-                        } catch (NotFoundException e) {
-                            e.printStackTrace();
-                        } catch (CannotCompileException e) {
-                            e.printStackTrace();
-                        }
+                        } 
                     }
                 });
 
@@ -44,17 +41,10 @@ public class WithGenericFunctions {
                 Method main = rtClass.getMethod("main", String[].class);
                 String[] params = null; // init params accordingly
                 main.invoke(null, (Object) params);
-            } catch (NotFoundException e) {
+            } catch (NotFoundException | NoSuchMethodException | IllegalAccessException |
+                    InvocationTargetException | CannotCompileException e) {
                 e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (CannotCompileException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+            } 
 
             /*Loader classLoader = new Loader();
             System.out.println("Output:");
