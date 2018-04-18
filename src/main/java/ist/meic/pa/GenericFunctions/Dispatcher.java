@@ -13,13 +13,11 @@ public class Dispatcher {
         try {
             Class calledClass = Class.forName(calledClassName);
             if (calledClass.isAnnotationPresent(GenericFunction.class) ){
-                //System.out.println("Possible methods that fit the method call:");
                 for (Method method : calledClass.getDeclaredMethods()){
                     if (method.getName().equals(calledMethodName) &&
                             method.getParameterCount() == args.length &&
                             Modifier.isStatic(method.getModifiers())){
                         methodsThatFit.add(method);
-                        //System.out.println(method);
                     }
                 }
 
@@ -98,11 +96,7 @@ public class Dispatcher {
                 }
 
                 if (found) {
-                    //System.out.println("Chosen method:");
                     Method rightMethod = methodsThatFit.get(0);
-                    //System.out.println(rightMethod);
-
-                    //TODO: call the rightMethod and return whatever he returns
                     return rightMethod.invoke(null, args);
                 }
             }

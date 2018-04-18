@@ -24,11 +24,33 @@ public class WithGenericFunctions {
                 method.instrument(new ExprEditor() {
                     public void edit(MethodCall m) {
                         try {
-                            Class calledClass = Class.forName(m.getClassName());
+                            CtClass calledClass = cp.get(m.getClassName());
                             CtMethod calledMethod = m.getMethod();
-                            if (calledClass.isAnnotationPresent(GenericFunction.class)){
-                                System.out.println("ist.meic.pa.GenericFunctions.Dispatcher.dispatch($args,\"" + calledClass.getName() + "\",\"" + calledMethod.getName() + "\");");
+                            if (calledClass.getAnnotation(GenericFunction.class) != null){
                                 m.replace("$_ = ($r) ist.meic.pa.GenericFunctions.Dispatcher.dispatch($args,\"" + calledClass.getName() + "\",\"" + calledMethod.getName() + "\");");
+                                for (CtMethod me : calledClass.getDeclaredMethods()){
+                                    if (me.getName().equals(calledMethod.getName()) &&
+                                            me.getParameterTypes().length == calledMethod.getParameterTypes().length &&
+                                            Modifier.isStatic(me.getModifiers())){
+
+                                        me.instrument(new ExprEditor() {
+                                            public void edit(MethodCall mc){
+                                                try {
+                                                    if (mc.getMethodName().equals(calledMethod.getName()) &&
+                                                            mc.getMethod().getParameterTypes().length == calledMethod.getParameterTypes().length &&
+                                                            Modifier.isStatic(mc.getMethod().getModifiers())){
+                                                        mc.replace("$_ = ($r) ist.meic.pa.GenericFunctions.Dispatcher.dispatch($args,\"" + calledClass.getName() + "\",\"" + mc.getMethodName() + "\");");
+                                                    }
+                                                } catch (NotFoundException e) {
+                                                    e.printStackTrace();
+                                                } catch (CannotCompileException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                                calledClass.toClass();
                             }
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
@@ -55,16 +77,6 @@ public class WithGenericFunctions {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-
-            /*Loader classLoader = new Loader();
-            System.out.println("Output:");
-            try{
-                classLoader.run(args[0], Arrays.copyOfRange(args, 1, args.length));
-            }
-            catch (Throwable t){
-                System.out.println("class loader failed to run");
-                t.printStackTrace();
-            }*/
         }
     }
 }
