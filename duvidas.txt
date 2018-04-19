@@ -1,6 +1,6 @@
 Duvidas:
-é preciso escrever o nome todo ist.meic.whatever em chamadas a funçoes dentro do mesmo package 
-faz-se before e after se nao encontras metodos compativeis?
+faz-se before e after se nao encontras metodos compativeis?(neste meomento tamos a fazer before, test J)
+
 Test D: caso haja 2 chamadas ao mesmo metodo aquilo ta a repetir a instrumentaçao da called class e explode pk frozen
 
 To do:

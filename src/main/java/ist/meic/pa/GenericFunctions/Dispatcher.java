@@ -13,14 +13,14 @@ public class Dispatcher {
         int dist = 0;
         Class aux = calledType;
         while (!aux.equals(definedType)) {
-            boolean fit = false;
+            boolean fits = false;
             for (Class calledInterface : aux.getInterfaces()) {
                 if (calledInterface.equals(definedType)) {
-                    fit = true;
+                    fits = true;
                     break;
                 }
             }
-            if (fit)
+            if (fits)
                 break;
 
             dist++;
@@ -55,10 +55,10 @@ public class Dispatcher {
         }
         Set resultSet = null;
         if (typeOfMethod.equals(BeforeMethod.class)){
-            //execute before methods by order
+            //execute before methods from most to least specific
             resultSet = overallDistance.keySet();
-        } else {
-            //execute after methods by order
+        } else {//AfterMethod
+            //execute after methods from least to most specific
             List list = new ArrayList(overallDistance.keySet());
             Collections.sort(list, Collections.reverseOrder());
             resultSet = new LinkedHashSet(list);
@@ -66,13 +66,10 @@ public class Dispatcher {
         for(Object key : resultSet) {
             try {
                 overallDistance.get(key).invoke(null, args);
-            } catch (IllegalAccessException e) {
+            } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
+            } 
         }
-
     }
 
     public static Object dispatch(Object[] args, String calledClassName, String calledMethodName){
@@ -107,7 +104,6 @@ public class Dispatcher {
                 }
 
                 ArrayList<Method> originalMethodsThatFit = new ArrayList<Method>(methodsThatFit);
-
                 //doing before methods
                 handleBeforeAndAfter(BeforeMethod.class, originalMethodsThatFit, calledParameters, args);
 
@@ -123,7 +119,6 @@ public class Dispatcher {
                 //calculating method with the closest parameters
                 curr = 0;
                 for (Class calledType : calledParameters){
-
                     //get distances
                     ArrayList<Integer> distances = new ArrayList<>();
                     for (Method me : methodsThatFit){
@@ -154,13 +149,13 @@ public class Dispatcher {
                             it2.remove();
                         }
                     }
-
                     curr++;
                 }
 
                 Object returnValue=null;
                 if (found) {
                     Method rightMethod = methodsThatFit.get(0);
+                    rightMethod.setAccessible(true);
                     returnValue = rightMethod.invoke(null, args);
 
                     //doing after methods
@@ -168,8 +163,7 @@ public class Dispatcher {
                 }
                 return returnValue;
             }
-        } catch (ClassNotFoundException | IllegalAccessException |
-                 InvocationTargetException e) {
+        } catch (ClassNotFoundException | IllegalAccessException |InvocationTargetException e) {
             e.printStackTrace();
         } 
         return 0;
