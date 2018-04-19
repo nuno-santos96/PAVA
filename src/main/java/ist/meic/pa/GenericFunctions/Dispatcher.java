@@ -54,6 +54,15 @@ public class Dispatcher {
                 }
                 ArrayList<Method> originalMethodsThatFit = new ArrayList<Method>(methodsThatFit);
 
+                Iterator<Method> ite = methodsThatFit.iterator();
+                while (ite.hasNext()) {
+                    Method meth = ite.next();
+                    if (meth.isAnnotationPresent(BeforeMethod.class) ||
+                            meth.isAnnotationPresent(AfterMethod.class)) {
+                        ite.remove();
+                    }
+                }
+
                 //calculating method with the closest parameters
                 curr = 0;
                 for (Class a : calledParameters){
@@ -73,6 +82,13 @@ public class Dispatcher {
                         distances.add(dist);
                     }
 
+                    //if no method fits
+                    if (methodsThatFit.size() == 0) {
+                        System.out.println("Can't call any method!");
+                        found = false;
+                        break;
+                    }
+
                     int min = distances.get(0);
                     for (int i : distances){
                         min = min < i ? min : i;
@@ -88,26 +104,22 @@ public class Dispatcher {
                         }
                     }
 
-                    //if no method fits
-                    if (methodsThatFit.size() == 0) {
-                        System.out.println("Can't call any method!");
-                        found = false;
-                        break;
-                    }
                     curr++;
                 }
                 Object returnValue=null;
                 if (found) {
                     Method rightMethod = methodsThatFit.get(0);
                     returnValue = rightMethod.invoke(null, args);
-                }
 
-                //doing after methods
-                for (Method me : originalMethodsThatFit) {
-                    if (me.isAnnotationPresent(AfterMethod.class)){
-                        me.invoke(null, args);
+                    //doing after methods
+                    for (Method me : originalMethodsThatFit) {
+                        if (me.isAnnotationPresent(AfterMethod.class)){
+                            me.invoke(null, args);
+                        }
                     }
                 }
+
+
                 return returnValue;
             }
         } catch (ClassNotFoundException | IllegalAccessException |
