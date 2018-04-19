@@ -1,12 +1,7 @@
 Duvidas:
-chamadas a bine dentro de uma funçao bine (recursivo que nao é bom para a soluçao de mudar o nome, e outro)
-
-
-
 é preciso escrever o nome todo ist.meic.whatever em chamadas a funçoes dentro do mesmo package 
+faz-se before e after se nao encontras metodos compativeis?
+Test D: caso haja 2 chamadas ao mesmo metodo aquilo ta a repetir a instrumentaçao da called class e explode pk frozen
 
-é suposto impedir de executar os before e after no meio?
-
-To do
-tratar das chamadas a bin dentro de Com
-ver casos em que a WhitGenericFucntions recebe mais args para alem do nome da classe
+To do:
+test
