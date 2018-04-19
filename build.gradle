@@ -40,6 +40,7 @@ repositories {
 run{
     standardInput = System.in
     //args = ["ist.meic.pa.GenericFunctions.TestCombine"]
-    //args=["ist.meic.pa.GenericFunctions.TestColors"]
-    args=["ist.meic.pa.GenericFunctions.tests.TestD"]
+    //args=["ist.meic.pa.GenericFunctions.tests.TestG"]
+    //args=["ist.meic.pa.GenericFunctions.tests.TestD"]
+    args=["ist.meic.pa.GenericFunctions.tests.TestP"]
 }
