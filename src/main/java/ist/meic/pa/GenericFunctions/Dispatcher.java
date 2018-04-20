@@ -8,9 +8,9 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 public class Dispatcher {
-
     private static ArrayList<Method> methodsThatFit = new ArrayList<>();
 
+    //compares 2 parameter types (of the called method and the defined method), returning their distance
     private static int calculateDistance(Class calledType, Class definedType){
         int dist = 0;
         Class aux = calledType;
@@ -24,7 +24,6 @@ public class Dispatcher {
             }
             if (fits)
                 break;
-
             dist++;
             aux = aux.getSuperclass();
             if (aux == null) {
@@ -41,6 +40,7 @@ public class Dispatcher {
         return min;
     }
 
+    //calculates the order for the execution and invokes before/after methods
     private static void handleBeforeAndAfter(Class typeOfMethod, List<Method> methodsThatFit, List<Class> calledParameters, Object[] args){
         //saving distances for each method
         TreeMap<Integer,Method> overallDistance = new TreeMap<>();
@@ -74,6 +74,7 @@ public class Dispatcher {
         }
     }
 
+    //choosing the method with the closest parameters to the one that was called
     private static Method chooseClosestMethod(List<Class> calledParameters){
         int curr = 0;
         for (Class calledType : calledParameters){
@@ -109,6 +110,7 @@ public class Dispatcher {
         return methodsThatFit.get(0);
     }
 
+    //choose which methods to call, and invokes them
     public static Object dispatch(Object[] args, String calledClassName, String calledMethodName){
         ArrayList<Class> calledParameters = new ArrayList<>();  //types of the parameters that were in the method call
         Object returnValue=null;
@@ -155,14 +157,13 @@ public class Dispatcher {
                 }
             }
 
-            //only execute before methods if there's at least one compatible method that fit the call
+            //only execute before methods if there's at least one compatible method that fits the call
             if (!methodsThatFit.isEmpty()) {
                 handleBeforeAndAfter(BeforeMethod.class, originalMethodsThatFit, calledParameters, args);
             }
 
-            //calculating method with the closest parameters
+            //calculating and invoking method with the closest parameters
             Method rightMethod = chooseClosestMethod(calledParameters);
-
             if (rightMethod != null) {
                 rightMethod.setAccessible(true);
                 returnValue = rightMethod.invoke(null, args);
