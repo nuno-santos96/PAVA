@@ -4,8 +4,7 @@ import javassist.*;
 import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -42,7 +41,6 @@ public class WithGenericFunctions {
     public static void main(String[] args) {
         if (args.length < 1){
             System.out.println("Need a class name");
-            throw new IllegalArgumentException();
         } else {
             System.out.println("Class : " + args[0]);
             try {

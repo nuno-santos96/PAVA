@@ -9,6 +9,8 @@ import java.util.*;
 
 public class Dispatcher {
 
+    private static ArrayList<Method> methodsThatFit = new ArrayList<>();
+
     private static int calculateDistance(Class calledType, Class definedType){
         int dist = 0;
         Class aux = calledType;
@@ -72,100 +74,105 @@ public class Dispatcher {
         }
     }
 
+    private static Method chooseClosestMethod(List<Class> calledParameters){
+        int curr = 0;
+        for (Class calledType : calledParameters){
+
+            //if no method fits
+            if (methodsThatFit.size() == 0) {
+                System.out.println("Can't call any method!");
+                return null;
+            }
+
+            //get distances
+            ArrayList<Integer> distances = new ArrayList<>();
+            for (Method me : methodsThatFit){
+                Class definedType = me.getParameterTypes()[curr];
+                int distance = calculateDistance(calledType,definedType);
+                distances.add(distance);
+            }
+
+            int min = calculateMinimum(distances);
+
+            //remove the ones that dont have minimum distance
+            Iterator<Integer> it = distances.iterator();
+            Iterator<Method> it2 = methodsThatFit.iterator();
+            while (it.hasNext()) {
+                it2.next();
+                if (it.next() != min) {
+                    it.remove();
+                    it2.remove();
+                }
+            }
+            curr++;
+        }
+        return methodsThatFit.get(0);
+    }
+
     public static Object dispatch(Object[] args, String calledClassName, String calledMethodName){
-        ArrayList<Method> methodsThatFit = new ArrayList<>();
+        ArrayList<Class> calledParameters = new ArrayList<>();  //types of the parameters that were in the method call
+        Object returnValue=null;
+
+        //get parameters types of the method call
+        for (Object arg : args)
+            calledParameters.add(arg.getClass());
+
         try {
             Class calledClass = Class.forName(calledClassName);
-            if (calledClass.isAnnotationPresent(GenericFunction.class) ){
-                for (Method method : calledClass.getDeclaredMethods()){
-                    if (method.getName().equals(calledMethodName) &&
-                            method.getParameterCount() == args.length &&
-                            Modifier.isStatic(method.getModifiers())){
-                        methodsThatFit.add(method);
-                    }
+
+            //get all methods that possibly fit the method call
+            for (Method method : calledClass.getDeclaredMethods()){
+                if (method.getName().equals(calledMethodName) &&
+                        method.getParameterCount() == args.length &&
+                        Modifier.isStatic(method.getModifiers())){
+                    methodsThatFit.add(method);
                 }
+            }
 
-                ArrayList<Class> calledParameters = new ArrayList<>();
-                for (Object o : args)
-                    calledParameters.add(o.getClass());
-
-                //removing incompatible methods
-                int curr = 0;
-                Boolean found = true;
-                for (Class calledType : calledParameters) {
-                    Iterator<Method> i = methodsThatFit.iterator();
-                    while (i.hasNext()) {
-                        Class definedType = i.next().getParameterTypes()[curr];
-                        int distance = calculateDistance(calledType,definedType);
-                        if (distance == Integer.MAX_VALUE)
-                            i.remove();
-                    }
-                    curr++;
+            //removing incompatible methods
+            int curr = 0;
+            for (Class calledType : calledParameters) {
+                Iterator<Method> i = methodsThatFit.iterator();
+                while (i.hasNext()) {
+                    Class definedType = i.next().getParameterTypes()[curr];
+                    int distance = calculateDistance(calledType,definedType);
+                    if (distance == Integer.MAX_VALUE)
+                        i.remove();
                 }
+                curr++;
+            }
 
-                ArrayList<Method> originalMethodsThatFit = new ArrayList<Method>(methodsThatFit);
-                //doing before methods
+            ArrayList<Method> originalMethodsThatFit = new ArrayList<>(methodsThatFit);
+
+            //removing before and after methods from the methodsThatFit
+            //this methods are not considered on the search of the closest method
+            Iterator<Method> ite = methodsThatFit.iterator();
+            while (ite.hasNext()) {
+                Method meth = ite.next();
+                if (meth.isAnnotationPresent(BeforeMethod.class) ||
+                        meth.isAnnotationPresent(AfterMethod.class)) {
+                    ite.remove();
+                }
+            }
+
+            //only execute before methods if there's at least one compatible method that fit the call
+            if (!methodsThatFit.isEmpty()) {
                 handleBeforeAndAfter(BeforeMethod.class, originalMethodsThatFit, calledParameters, args);
+            }
 
-                Iterator<Method> ite = methodsThatFit.iterator();
-                while (ite.hasNext()) {
-                    Method meth = ite.next();
-                    if (meth.isAnnotationPresent(BeforeMethod.class) ||
-                            meth.isAnnotationPresent(AfterMethod.class)) {
-                        ite.remove();
-                    }
-                }
+            //calculating method with the closest parameters
+            Method rightMethod = chooseClosestMethod(calledParameters);
 
-                //calculating method with the closest parameters
-                curr = 0;
-                for (Class calledType : calledParameters){
-                    //get distances
-                    ArrayList<Integer> distances = new ArrayList<>();
-                    for (Method me : methodsThatFit){
-                        Class definedType = me.getParameterTypes()[curr];
-                        int distance = calculateDistance(calledType,definedType);
-                        distances.add(distance);
-                    }
+            if (rightMethod != null) {
+                rightMethod.setAccessible(true);
+                returnValue = rightMethod.invoke(null, args);
 
-                    //if no method fits
-                    if (methodsThatFit.size() == 0) {
-                        System.out.println("Can't call any method!");
-                        found = false;
-                        break;
-                    }
-
-                    //get minimum distance
-                    int min = distances.get(0);
-                    for (int i : distances)
-                        min = min < i ? min : i;
-
-                    //remove the ones that dont have minimum distance
-                    Iterator<Integer> it = distances.iterator();
-                    Iterator<Method> it2 = methodsThatFit.iterator();
-                    while (it.hasNext()) {
-                        it2.next();
-                        if (it.next() != min) {
-                            it.remove();
-                            it2.remove();
-                        }
-                    }
-                    curr++;
-                }
-
-                Object returnValue=null;
-                if (found) {
-                    Method rightMethod = methodsThatFit.get(0);
-                    rightMethod.setAccessible(true);
-                    returnValue = rightMethod.invoke(null, args);
-
-                    //doing after methods
-                    handleBeforeAndAfter(AfterMethod.class, originalMethodsThatFit, calledParameters, args);
-                }
-                return returnValue;
+                //doing after methods
+                handleBeforeAndAfter(AfterMethod.class, originalMethodsThatFit, calledParameters, args);
             }
         } catch (ClassNotFoundException | IllegalAccessException |InvocationTargetException e) {
             e.printStackTrace();
-        } 
-        return 0;
+        }
+        return returnValue;
     }
 }
