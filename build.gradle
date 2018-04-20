@@ -16,6 +16,7 @@ plugins {
 
 // Define the main class for the application
 mainClassName = 'ist.meic.pa.GenericFunctions.WithGenericFunctions'
+//mainClassName = 'ist.meic.pa.GenericFunctionsExtended.WithGenericFunctions'
 
 configurations{
     jar.archiveName='myJar.jar'
@@ -39,10 +40,5 @@ repositories {
 
 run{
     standardInput = System.in
-    //args = ["ist.meic.pa.GenericFunctions.TestCombine"]
-    //args=["ist.meic.pa.GenericFunctions.tests.TestJ"]
-    //args=["ist.meic.pa.GenericFunctions.tests.TestD"]
     args=["ist.meic.pa.GenericFunctions.tests.TestK"]
-    //args=["ist.meic.pa.GenericFunctions.tests.TestJ"]
-    //args=["ist.meic.pa.GenericFunctions.tests.TestJ"]
 }
