@@ -136,7 +136,6 @@ public class Dispatcher {
                 return null;
             }
             try {
-                //if contains?
                 for (Method m : beforeCache.get(calledParameters)){
                     m.invoke(null, args);
                 }

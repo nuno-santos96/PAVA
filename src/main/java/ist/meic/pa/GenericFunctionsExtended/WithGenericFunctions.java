@@ -13,6 +13,7 @@ public class WithGenericFunctions {
     private static String DISPATCH = "ist.meic.pa.GenericFunctions.Dispatcher.dispatch";
     private static ArrayList<String> instrumentedClasses = new ArrayList<>();
 
+    //replaces method calls to generic function with calls to dispatch
     private static void instrument(ClassPool cp, CtClass classToInstrument){
         try {
             instrumentedClasses.add(classToInstrument.getName());

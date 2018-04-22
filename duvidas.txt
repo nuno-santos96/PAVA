@@ -1,7 +1,0 @@
-Duvidas:
-faz-se before e after se nao encontras metodos compativeis?(neste meomento tamos a fazer before, test J)
-
-Test D: caso haja 2 chamadas ao mesmo metodo aquilo ta a repetir a instrumentaçao da called class e explode pk frozen
-
-To do:
-test
